@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Location Sender</title>
+  </head>
+  <body>
+    <button onclick="sendLocation()">Send Location</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+    <script>
+      function sendLocation() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+          var data = "Latitude: " + latitude + "\nLongitude: " + longitude;
+
+          axios({
+            method: 'POST',
+            url: 'https://api.github.com/repos/USERNAME/REPOSITORY/contents/location.txt',
+            headers: {
+              'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+              'Content-Type': 'application/json'
+            },
+            data: {
+              'message': 'Add location coordinates',
+              'content': btoa(data)
+            }
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
